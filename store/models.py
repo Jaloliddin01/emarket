@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 class Promotion(models.Model):
     description = models.CharField(max_length=255)
@@ -18,11 +19,11 @@ class Collection(models.Model):
 class Product(models.Model):
     title       = models.CharField(max_length=255)
     slug        = models.SlugField(null=True) 
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     unit_price  = models.DecimalField(max_digits=8, decimal_places=2)
-    inventory   = models.IntegerField()
+    inventory   = models.IntegerField(validators=[MinValueValidator(0)])
     last_update = models.DateTimeField(auto_now_add=True)
-    collection  = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection  = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name='products')
     promotions  = models.ManyToManyField(Promotion)
 
     def __str__(self) -> str:
@@ -92,5 +93,11 @@ class CartItem(models.Model):
     cart     = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product  = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
+
+class Review(models.Model):
+    product     = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
+    name        = models.CharField(max_length=255)
+    description = models.TextField()
+    date        = models.DateField(auto_now_add=True)
 
 
