@@ -4,7 +4,7 @@
 
 ### Run on Windows
 ### ``python -m venv env``
-### source env\Scripts\activate
+### ```source env\Scripts\activate```
 ### pip install -r requirements.txt
 ### python manage.py makemigrations
 ### python manage.py migrate
